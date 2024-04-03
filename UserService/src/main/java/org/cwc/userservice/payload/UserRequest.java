@@ -8,4 +8,8 @@ import lombok.*;
 @Getter
 @Builder
 public class UserRequest {
+
+    private String userId;
+    private String name;
+    private String email;
 }

@@ -7,9 +7,8 @@ import lombok.*;
 @Setter
 @Getter
 @Builder
-public class ProductResponse {
+public class ProductInteractionRequest {
+
     private int productId;
-    private String name;
-    private String description;
-    private double price;
+    private String message;
 }

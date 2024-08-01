@@ -1,19 +1,40 @@
-# Pay Slip Generation Script
+# Let's create a README file with the provided content.
 
-This project provides a Google Apps Script for generating pay slips using a Google Document template. The script processes JSON data, generates pay slips for a specified salary period, and saves them to Google Drive.
+readme_content = """
+# Pay Slip and Document Generation Script
+
+This project provides a Google Apps Script for generating pay slips and other documents using Google Document templates. The script processes JSON data, replaces placeholders with actual data, and saves the documents to Google Drive. It also emails the generated documents to the candidate.
+
+## Table of Contents
+1. [Overview](#overview)
+2. [Setup](#setup)
+3. [Script Functions](#script-functions)
+    - [doGet(e)](#dogete)
+    - [generateSalaryMonths(salaryFrom, salaryTo)](#generatesalarymonthssalaryfrom-salaryto)
+    - [paymentSlip(template)](#paymentsliptemplate)
+    - [sendEmail(template, attachmentBlobs)](#sendemailtemplate-attachmentblobs)
+    - [createCompanyFolder(parentFolderId, companyName)](#createcompanyfolderparentfolderid-companyname)
+    - [createCandidateFolder(parentFolder, candidateName)](#createcandidatefolderparentfolder-candidatename)
+    - [deleteTempFiles(folder)](#deletetempfilesfolder)
+    - [getOrCreateFolderByName(folderName)](#getorcreatefolderbynamefoldername)
+4. [Template Placeholders](#template-placeholders)
+5. [Example Template Document](#example-template-document)
+6. [Notes](#notes)
+7. [License](#license)
+8. [Contact](#contact)
 
 ## Overview
 
 The script performs the following tasks:
-1. **Receive and Parse JSON Data**: Extracts data from a JSON object.
-2. **Generate Salary Months**: Creates a list of months within the salary period.
-3. **Generate Pay Slips**: Creates pay slips by replacing placeholders in a Google Document template.
-4. **Save Pay Slips to Google Drive**: Saves the generated pay slips as PDF files in Google Drive.
+1. **Receive and Parse JSON Data**: Extracts data from a JSON object provided via an HTTP request.
+2. **Generate Documents**: Replaces placeholders in Google Document templates with actual data.
+3. **Save Documents to Google Drive**: Saves the generated documents as PDF files in a structured folder hierarchy.
+4. **Send Documents via Email**: Sends the generated documents to the candidate's email.
 
 ## Setup
 
-1. **Create a Google Document Template**:
-   - Design your template in Google Docs.
+1. **Create Google Document Templates**:
+   - Design your templates in Google Docs.
    - Use placeholders as described below.
 
 2. **Deploy the Google Apps Script**:
@@ -28,10 +49,10 @@ The script performs the following tasks:
 Handles incoming HTTP GET requests. Parses JSON data, extracts relevant information, and calls the `paymentSlip` function.
 
 **Parameters**:
-- `e` - HTTP request object containing `responseJson`.
+- `e` - HTTP request object containing `jsonData`.
 
 **Returns**:
-- A text response indicating success or failure.
+- A JSON response indicating the status of document generation.
 
 ### `generateSalaryMonths(salaryFrom, salaryTo)`
 
@@ -46,38 +67,66 @@ Generates a list of formatted month-year strings between `salaryFrom` and `salar
 
 ### `paymentSlip(template)`
 
-Generates pay slips by replacing placeholders in the template document and saves them as PDFs in Google Drive.
+Generates documents by replacing placeholders in the template documents and saves them as PDFs in Google Drive.
 
 **Parameters**:
 - `template` - An object containing candidate and salary details.
 
 **Returns**:
-- An array of `Blob` objects representing the generated PDF files.
+- An array of objects representing the generated documents.
 
-### `createFolders(parentFolderName, folderNames)`
+### `sendEmail(template, attachmentBlobs)`
 
-Creates specified folders under a given parent folder in Google Drive.
+Sends an email with the generated documents as attachments.
 
 **Parameters**:
-- `parentFolderName` - Name of the parent folder.
-- `folderNames` - Array of folder names to create.
+- `template` - An object containing candidate details.
+- `attachmentBlobs` - An array of Blob objects representing the attachments.
+
+### `createCompanyFolder(parentFolderId, companyName)`
+
+Creates or retrieves a folder for the company within a specified parent folder.
+
+**Parameters**:
+- `parentFolderId` - ID of the parent folder.
+- `companyName` - Name of the company.
 
 **Returns**:
-- An array of created folders.
+- The folder object for the company.
 
-### `deleteFolderContents(folder)`
+### `createCandidateFolder(parentFolder, candidateName)`
+
+Creates or retrieves a folder for the candidate within a specified company folder.
+
+**Parameters**:
+- `parentFolder` - The parent folder for the company.
+- `candidateName` - The name of the candidate.
+
+**Returns**:
+- The folder object for the candidate.
+
+### `deleteTempFiles(folder)`
 
 Deletes all files within a specified folder.
 
 **Parameters**:
 - `folder` - The folder to clean.
 
+### `getOrCreateFolderByName(folderName)`
+
+Retrieves an existing folder by name or creates a new one if it doesn't exist.
+
+**Parameters**:
+- `folderName` - The name of the folder.
+
+**Returns**:
+- The folder object.
+
 ## Template Placeholders
 
 The following placeholders should be included in your Google Docs template:
 
 - **`{Name}`**: Candidate's full name.
-- **`{SalaryMonths}`**: Formatted month and year for the salary period.
 - **`{CompanyName}`**: Name of the company.
 - **`{OfferDate}`**: Date when the offer was made.
 - **`{JoiningDate}`**: Date of joining.
@@ -97,9 +146,37 @@ The following placeholders should be included in your Google Docs template:
 - **`InHSalary`**: In-hand salary.
 - **`MonGrSalary`**: Monthly gross salary.
 - **`MonInHSalary`**: Monthly in-hand salary.
-- **`{PanNumber}`**: PAN (Permanent Account Number) of the candidate.
+- **`{BankName}`**: Name of the bank.
+- **`{IfscCode}`**: IFSC code of the bank.
+- **`{AccountNo}`**: Account number.
+- **`{AccountHolderName}`**: Account holder's name.
+- **`{UanNumber}`**: UAN number.
+- **`{EsiNumber}`**: ESI number.
+- **`{AadarNumber}`**: Aadhar number.
+- **`{PanNumber}`**: PAN (Permanent Account Number).
 
 ## Example Template Document
 
 Here’s an example of how your template document might look:
 
+
+## Notes
+
+- Ensure that the placeholders in the template exactly match those specified above.
+- The script requires access to Google Drive and Google Docs to create and manage files.
+- The script uses Google Apps Script's `MailApp` to send emails.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Contact
+
+For questions or support, contact [Your Name](mailto:your.email@example.com).
+"""
+
+# Write the content to a README.md file
+with open("/mnt/data/README.md", "w") as file:
+    file.write(readme_content)
+
+"/mnt/data/README.md"
